@@ -1,0 +1,141 @@
+.codex-panel-box {
+  spacing: 6px;
+}
+
+.codex-panel-icon,
+.codex-menu-logo {
+  color: -st-accent-color;
+}
+
+.codex-panel-percent {
+  font-weight: 700;
+  font-size: 0.95em;
+  font-feature-settings: "tnum";
+}
+
+.codex-menu-header-item {
+  padding: 10px 12px 12px;
+}
+
+.codex-menu-header {
+  spacing: 12px;
+  min-width: 330px;
+}
+
+.codex-menu-logo {
+  margin-right: 2px;
+}
+
+.codex-menu-title {
+  font-weight: 700;
+  font-size: 1.15em;
+}
+
+.codex-menu-subtitle,
+.codex-card-caption,
+.codex-card-detail,
+.codex-card-reset,
+.codex-menu-footer {
+  color: rgba(127, 127, 127, 0.95);
+  font-size: 0.88em;
+}
+
+.codex-status-pill {
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.72em;
+  font-weight: 700;
+}
+
+.codex-status-pill.is-ready {
+  background-color: rgba(38, 162, 105, 0.18);
+  color: #2ec27e;
+}
+
+.codex-status-pill.is-loading {
+  background-color: rgba(53, 132, 228, 0.18);
+  color: #62a0ea;
+}
+
+.codex-status-pill.is-idle {
+  background-color: rgba(127, 127, 127, 0.16);
+  color: rgba(127, 127, 127, 0.95);
+}
+
+.codex-card-menu-item {
+  padding: 3px 8px;
+}
+
+.codex-usage-card {
+  min-width: 330px;
+  spacing: 10px;
+  padding: 13px 14px;
+  margin: 3px 2px 7px;
+  border-radius: 12px;
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  background-color: rgba(127, 127, 127, 0.09);
+}
+
+.codex-card-top {
+  spacing: 10px;
+}
+
+.codex-card-title {
+  font-weight: 650;
+  font-size: 1em;
+}
+
+.codex-card-caption {
+  margin-top: 2px;
+}
+
+.codex-card-percent {
+  font-size: 1.5em;
+  font-weight: 750;
+  font-feature-settings: "tnum";
+}
+
+.codex-progress-track {
+  min-height: 6px;
+  border-radius: 999px;
+  background-color: rgba(127, 127, 127, 0.22);
+}
+
+.codex-progress-fill {
+  min-height: 6px;
+  border-radius: 999px;
+}
+
+.codex-progress-fill.is-normal {
+  background-color: #3584e4;
+}
+
+.codex-progress-fill.is-warning {
+  background-color: #e5a50a;
+}
+
+.codex-progress-fill.is-critical {
+  background-color: #e01b24;
+}
+
+.codex-card-bottom {
+  spacing: 8px;
+}
+
+.codex-card-reset {
+  font-feature-settings: "tnum";
+}
+
+.codex-menu-footer-item {
+  padding: 8px 12px 3px;
+}
+
+.codex-menu-footer,
+.codex-empty-state {
+  font-size: 0.88em;
+}
+
+.codex-empty-state {
+  padding: 16px 12px;
+  color: rgba(127, 127, 127, 0.95);
+}

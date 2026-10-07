@@ -1,0 +1,10 @@
+{
+  "uuid": "codex-monitor@frankooseb",
+  "name": "Codex Monitor by FrankooSeb",
+  "description": "FrankooSeb: consulta en el panel de GNOME tus límites de uso de Codex de cinco horas y semanales.",
+  "shell-version": ["45", "46", "47", "48", "49", "50", "51"],
+  "settings-schema": "org.gnome.shell.extensions.codex-monitor",
+  "url": "https://github.com/FalkFranco/codex-monitor-gnome",
+  "version": 1,
+  "version-name": "1.0.0"
+}
