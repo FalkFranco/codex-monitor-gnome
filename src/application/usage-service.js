@@ -12,10 +12,10 @@ export class UsageService {
         try {
             credential = await getCredential();
         } catch {
-            throw new UsageError('No se pudo acceder a GNOME Keyring.', 'keyring');
+            throw new UsageError('Unable to access GNOME Keyring.', 'keyring');
         }
         if (!credential)
-            throw new UsageError('Pega y guarda tu cookie de sesión en Preferencias.', 'missing-credential');
+            throw new UsageError('Add and save a session cookie in Preferences.', 'missing-credential');
         return normalizeUsage(await this._client.fetchUsage(credential, cancellable));
     }
 

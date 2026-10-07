@@ -11,8 +11,8 @@ import {UsageService} from './src/application/usage-service.js';
 import {formatReset} from './src/domain/usage-model.js';
 
 const WINDOWS = [
-    {key: 'short', title: 'Límite de 5 horas', caption: 'Ventana de uso actual'},
-    {key: 'weekly', title: 'Límite semanal', caption: 'Uso acumulado de la semana'},
+    {key: 'short', title: '5-hour limit', caption: 'Current usage window'},
+    {key: 'weekly', title: 'Weekly limit', caption: 'Usage accumulated this week'},
 ];
 
 export default class CodexMonitorExtension extends Extension {
@@ -23,7 +23,7 @@ export default class CodexMonitorExtension extends Extension {
         this._cancellable = null;
         this._busy = false;
         this._usage = null;
-        this._status = 'Conectando con Codex…';
+        this._status = 'Connecting to Codex…';
 
         this._theme = St.ThemeContext.get_for_stage(global.stage).get_theme();
         this._stylesheet = Gio.File.new_for_path(`${this.path}/stylesheet.css`);
@@ -53,8 +53,8 @@ export default class CodexMonitorExtension extends Extension {
         this._menuSection = new PopupMenu.PopupMenuSection();
         this._indicator.menu.addMenuItem(this._menuSection);
         this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this._indicator.menu.addAction('Actualizar ahora', () => this._refresh());
-        this._indicator.menu.addAction('Preferencias', () => this.openPreferences());
+        this._indicator.menu.addAction('Refresh now', () => this._refresh());
+        this._indicator.menu.addAction('Preferences', () => this.openPreferences());
 
         this._settings.connectObject(
             'changed::refresh-interval', () => this._setupTimer(),
@@ -100,13 +100,13 @@ export default class CodexMonitorExtension extends Extension {
             return;
         this._busy = true;
         this._cancellable = new Gio.Cancellable();
-        this._status = 'Actualizando…';
+        this._status = 'Refreshing…';
         this._render();
         try {
             this._usage = await this._service.fetch(this._cancellable);
-            this._status = `Actualizado ${new Date(this._usage.fetchedAt).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+            this._status = `Updated ${new Date(this._usage.fetchedAt).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
         } catch (error) {
-            this._status = error.message || 'No se pudieron obtener los datos.';
+            this._status = error.message || 'Unable to retrieve usage data.';
         } finally {
             this._busy = false;
             this._cancellable = null;
@@ -139,9 +139,9 @@ export default class CodexMonitorExtension extends Extension {
         });
         const text = new St.BoxLayout({vertical: true, x_expand: true});
         text.add_child(new St.Label({text: 'Codex', style_class: 'codex-menu-title'}));
-        text.add_child(new St.Label({text: 'Uso de tu plan', style_class: 'codex-menu-subtitle'}));
+        text.add_child(new St.Label({text: 'Plan usage', style_class: 'codex-menu-subtitle'}));
         const state = new St.Label({
-            text: this._busy ? 'ACTUALIZANDO' : (this._usage ? 'AL DÍA' : 'SIN DATOS'),
+            text: this._busy ? 'REFRESHING' : (this._usage ? 'UP TO DATE' : 'NO DATA'),
             style_class: `codex-status-pill ${this._busy ? 'is-loading' : (this._usage ? 'is-ready' : 'is-idle')}`,
             y_align: Clutter.ActorAlign.CENTER,
         });
@@ -206,7 +206,7 @@ export default class CodexMonitorExtension extends Extension {
             y_align: Clutter.ActorAlign.CENTER,
             style_class: 'codex-card-bottom',
         });
-        bottom.add_child(new St.Label({text: `${Math.round(consumed)}% consumido`, style_class: 'codex-card-detail'}));
+        bottom.add_child(new St.Label({text: `${Math.round(consumed)}% used`, style_class: 'codex-card-detail'}));
         bottom.add_child(new St.Label({
             text: formatReset(window),
             style_class: 'codex-card-reset',
@@ -235,7 +235,7 @@ export default class CodexMonitorExtension extends Extension {
         const short = this._usage?.windows.short;
         this._panelLabel.set_text(short ? `${this._displayPercent(short)}%` : (this._busy ? '…' : '—'));
         this._indicator.accessible_name = short
-            ? `Codex: ${this._displayPercent(short)} por ciento ${this._settings.get_string('display-mode') === 'remaining' ? 'restante' : 'usado'}`
+            ? `Codex: ${this._displayPercent(short)} percent ${this._settings.get_string('display-mode') === 'remaining' ? 'remaining' : 'used'}`
             : `Codex: ${this._status}`;
 
         this._menuSection.removeAll();

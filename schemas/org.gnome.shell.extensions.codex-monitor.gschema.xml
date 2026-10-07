@@ -4,7 +4,7 @@
     <key name="refresh-interval" type="i">
       <default>15</default>
       <range min="5" max="120"/>
-      <summary>Intervalo de actualización en minutos</summary>
+      <summary>Refresh interval in minutes</summary>
     </key>
     <key name="display-mode" type="s">
       <default>'remaining'</default>
@@ -12,7 +12,7 @@
         <choice value="remaining"/>
         <choice value="used"/>
       </choices>
-      <summary>Porcentaje mostrado</summary>
+      <summary>Percentage shown</summary>
     </key>
   </schema>
 </schemalist>

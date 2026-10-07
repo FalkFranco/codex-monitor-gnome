@@ -20,12 +20,12 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
         let activeCancellable = null;
 
         const accountPage = new Adw.PreferencesPage({
-            title: 'Cuenta',
+            title: 'Account',
             icon_name: 'avatar-default-symbolic',
         });
         const accountGroup = new Adw.PreferencesGroup({
-            title: 'Cuenta de ChatGPT',
-            description: 'Conecta la sesión que usas para Codex. La cookie se guarda de forma segura en el llavero de GNOME.',
+            title: 'ChatGPT account',
+            description: 'Connect the session you use for Codex. Your cookie is stored securely in GNOME Keyring.',
         });
 
         const statusIcon = new Gtk.Image({
@@ -33,8 +33,8 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
             pixel_size: 16,
         });
         const statusRow = new Adw.ActionRow({
-            title: 'Estado de la sesión',
-            subtitle: 'Comprobando GNOME Keyring…',
+            title: 'Session status',
+            subtitle: 'Checking GNOME Keyring…',
         });
         statusRow.add_prefix(statusIcon);
         accountGroup.add(statusRow);
@@ -44,12 +44,12 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
             hexpand: true,
             width_chars: 32,
             max_width_chars: 48,
-            placeholder_text: 'Pega aquí la cookie de sesión',
+            placeholder_text: 'Paste your session cookie',
             activates_default: false,
         });
         const cookieRow = new Adw.ActionRow({
-            title: 'Cookie de sesión',
-            subtitle: 'El contenido se oculta mientras escribes.',
+            title: 'Session cookie',
+            subtitle: 'The value is hidden while you type.',
         });
         cookieRow.add_suffix(cookieEntry);
         cookieRow.set_activatable_widget(cookieEntry);
@@ -70,9 +70,9 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
             button.update_property([Gtk.AccessibleProperty.LABEL], [accessibleLabel]);
             return button;
         };
-        const testButton = makeActionButton('network-transmit-receive-symbolic', 'Probar conexión');
-        const saveButton = makeActionButton('document-save-symbolic', 'Guardar cookie', 'suggested-action');
-        const deleteButton = makeActionButton('user-trash-symbolic', 'Eliminar cookie', 'destructive-action');
+        const testButton = makeActionButton('network-transmit-receive-symbolic', 'Test connection');
+        const saveButton = makeActionButton('document-save-symbolic', 'Save cookie', 'suggested-action');
+        const deleteButton = makeActionButton('user-trash-symbolic', 'Delete cookie', 'destructive-action');
         const actionBox = new Gtk.Box({
             orientation: Gtk.Orientation.HORIZONTAL,
             spacing: 4,
@@ -83,16 +83,16 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
         actionBox.append(saveButton);
         actionBox.append(deleteButton);
         const actionsRow = new Adw.ActionRow({
-            title: 'Acciones de sesión',
-            subtitle: 'Probar, guardar o eliminar la cookie.',
+            title: 'Session actions',
+            subtitle: 'Test, save, or delete the cookie.',
         });
         actionsRow.add_suffix(actionBox);
         accountGroup.add(actionsRow);
 
-        const privacyGroup = new Adw.PreferencesGroup({title: 'Privacidad'});
+        const privacyGroup = new Adw.PreferencesGroup({title: 'Privacy'});
         privacyGroup.add(new Adw.ActionRow({
-            title: 'Almacenamiento protegido',
-            subtitle: 'La cookie se conserva en GNOME Keyring, no en las preferencias ni en archivos de texto.',
+            title: 'Secure storage',
+            subtitle: 'The cookie is kept in GNOME Keyring, not in preferences or plain-text files.',
             activatable: false,
         }));
 
@@ -105,13 +105,13 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
             icon_name: 'preferences-system-symbolic',
         });
         const displayGroup = new Adw.PreferencesGroup({
-            title: 'Visualización',
-            description: 'El modo seleccionado se aplica al porcentaje del panel y a los valores destacados del menú.',
+            title: 'Display',
+            description: 'The selected mode applies to the panel percentage and the highlighted values in the menu.',
         });
-        const displayModel = Gtk.StringList.new(['Porcentaje restante', 'Porcentaje usado']);
+        const displayModel = Gtk.StringList.new(['Percent remaining', 'Percent used']);
         const displayRow = new Adw.ComboRow({
-            title: 'Mostrar en el panel',
-            subtitle: 'El indicador del panel usa el límite de 5 horas.',
+            title: 'Panel percentage',
+            subtitle: 'The panel indicator uses the 5-hour limit.',
             model: displayModel,
             selected: settings.get_string('display-mode') === 'used' ? 1 : 0,
         });
@@ -122,12 +122,12 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
         displayGroup.add(displayRow);
 
         const refreshGroup = new Adw.PreferencesGroup({
-            title: 'Actualización',
-            description: 'La consulta se realiza en segundo plano. También puedes actualizar manualmente desde el menú del panel.',
+            title: 'Refresh',
+            description: 'Usage is checked in the background. You can also refresh manually from the panel menu.',
         });
         const interval = new Adw.SpinRow({
-            title: 'Intervalo de actualización',
-            subtitle: 'Cada cuántos minutos consultar el uso (entre 5 y 120).',
+            title: 'Refresh interval',
+            subtitle: 'How often to check usage, in minutes (5–120).',
             adjustment: new Gtk.Adjustment({
                 lower: 5,
                 upper: 120,
@@ -172,23 +172,23 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
         testButton.connect('clicked', async () => {
             const cookie = cookieEntry.get_text().trim();
             if (!cookie) {
-                setStatus('Pega la cookie de sesión antes de probar la conexión.', 'warning');
+                setStatus('Paste a session cookie before testing the connection.', 'warning');
                 cookieEntry.grab_focus();
                 return;
             }
 
             setBusy(true);
-            setStatus('Validando la sesión con ChatGPT…');
+            setStatus('Validating the session with ChatGPT…');
             const client = new ChatGPTUsageClient();
             const cancellable = new Gio.Cancellable();
             activeCancellable = cancellable;
             try {
                 const service = new UsageService(client);
                 await service.testCredential(cookie, cancellable);
-                setStatus('Conexión correcta. Pulsa «Guardar cookie» para conservar esta sesión.', 'success');
+                setStatus('Connection successful. Select “Save cookie” to keep this session.', 'success');
             } catch (error) {
                 if (!cancellable.is_cancelled())
-                    setStatus(error.message || 'No se pudo validar la sesión.', 'error');
+                    setStatus(error.message || 'Unable to validate the session.', 'error');
             } finally {
                 client.destroy();
                 if (activeCancellable === cancellable)
@@ -200,21 +200,21 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
         saveButton.connect('clicked', async () => {
             const cookie = cookieEntry.get_text().trim();
             if (!cookie) {
-                setStatus('Pega la cookie de sesión antes de guardarla.', 'warning');
+                setStatus('Paste a session cookie before saving it.', 'warning');
                 cookieEntry.grab_focus();
                 return;
             }
 
             setBusy(true);
-            setStatus('Guardando la cookie en GNOME Keyring…');
+            setStatus('Saving the cookie to GNOME Keyring…');
             try {
                 await saveCredential(cookie);
                 if (!disposed) {
                     cookieEntry.set_text('');
-                    setStatus('Cookie guardada de forma segura en GNOME Keyring.', 'success');
+                    setStatus('Cookie saved securely in GNOME Keyring.', 'success');
                 }
             } catch {
-                setStatus('No se pudo guardar la cookie. Comprueba que GNOME Keyring esté desbloqueado.', 'error');
+                setStatus('Unable to save the cookie. Check that GNOME Keyring is unlocked.', 'error');
             } finally {
                 setBusy(false);
             }
@@ -222,15 +222,15 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
 
         deleteButton.connect('clicked', async () => {
             setBusy(true);
-            setStatus('Eliminando la credencial…');
+            setStatus('Deleting the credential…');
             try {
                 await deleteCredential();
                 if (!disposed) {
                     cookieEntry.set_text('');
-                    setStatus('Credencial eliminada de GNOME Keyring.', 'success');
+                    setStatus('Credential deleted from GNOME Keyring.', 'success');
                 }
             } catch {
-                setStatus('No se pudo eliminar la credencial de GNOME Keyring.', 'error');
+                setStatus('Unable to delete the credential from GNOME Keyring.', 'error');
             } finally {
                 setBusy(false);
             }
@@ -240,10 +240,10 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
             if (disposed)
                 return;
             setStatus(credential
-                ? 'Hay una cookie guardada en GNOME Keyring.'
-                : 'No hay una cookie guardada. Pega una para conectar Codex.');
+                ? 'A cookie is stored in GNOME Keyring.'
+                : 'No cookie is stored. Add one to connect to Codex.');
         }).catch(() => {
-            setStatus('No se pudo acceder a GNOME Keyring.', 'error');
+            setStatus('Unable to access GNOME Keyring.', 'error');
         });
 
         window.connect('close-request', () => {

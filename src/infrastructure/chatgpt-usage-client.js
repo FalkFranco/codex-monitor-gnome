@@ -12,10 +12,10 @@ export class ChatGPTUsageClient {
 
     async fetchUsage(cookie, cancellable = null) {
         if (!cookie?.trim())
-            throw new UsageError('No hay una cookie guardada.', 'missing-credential');
+            throw new UsageError('No saved session cookie was found.', 'missing-credential');
         const session = await this._request('/api/auth/session', {cookie: cookie.trim(), cancellable});
         if (!session?.accessToken)
-            throw new UsageError('La sesión no es válida o ha caducado. Actualiza la cookie en Preferencias.', 'auth');
+            throw new UsageError('The session is invalid or expired. Update the cookie in Preferences.', 'auth');
         return this._request('/backend-api/wham/usage', {token: session.accessToken, cancellable});
     }
 
@@ -40,7 +40,7 @@ export class ChatGPTUsageClient {
                 try {
                     bytes = session.send_and_read_finish(result);
                 } catch {
-                    reject(new UsageError('Falló la conexión con ChatGPT o fue cancelada.', 'network'));
+                    reject(new UsageError('The ChatGPT request failed or was cancelled.', 'network'));
                     return;
                 }
                 const status = message.get_status();
@@ -49,15 +49,15 @@ export class ChatGPTUsageClient {
                 try {
                     payload = JSON.parse(body);
                 } catch {
-                    reject(new UsageError('ChatGPT devolvió una respuesta que no es JSON válido.', 'invalid-data'));
+                    reject(new UsageError('ChatGPT returned an invalid JSON response.', 'invalid-data'));
                     return;
                 }
                 if (status === 401 || status === 403) {
-                    reject(new UsageError('La sesión no es válida o ha caducado. Actualiza la cookie en Preferencias.', 'auth'));
+                    reject(new UsageError('The session is invalid or expired. Update the cookie in Preferences.', 'auth'));
                     return;
                 }
                 if (status < 200 || status >= 300) {
-                    reject(new UsageError(`ChatGPT respondió con HTTP ${status}.`, 'http'));
+                    reject(new UsageError(`ChatGPT returned HTTP ${status}.`, 'http'));
                     return;
                 }
                 resolve(payload);

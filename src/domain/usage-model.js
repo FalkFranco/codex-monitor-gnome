@@ -55,7 +55,7 @@ function collectWindows(payload) {
 
 export function normalizeUsage(payload) {
     if (!payload || typeof payload !== 'object')
-        throw new UsageError('El servidor devolvió una respuesta vacía.', 'invalid-data');
+        throw new UsageError('The server returned an empty response.', 'invalid-data');
 
     const windows = collectWindows(payload);
     const choose = target => windows
@@ -64,20 +64,20 @@ export function normalizeUsage(payload) {
     const short = choose(FIVE_HOURS);
     const weekly = choose(WEEK);
     if (!short && !weekly)
-        throw new UsageError('No se reconocieron los límites de cinco horas ni semanal.', 'invalid-data');
+        throw new UsageError('Could not identify the five-hour or weekly usage limits.', 'invalid-data');
     return {fetchedAt: Date.now(), windows: {short, weekly}};
 }
 
 export function formatReset(window) {
     if (!window?.resetsAt)
-        return 'Restablecimiento no disponible';
+        return 'Reset time unavailable';
     const seconds = Math.max(0, Math.floor((window.resetsAt - Date.now()) / 1000));
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     if (days > 0)
-        return `Se restablece en ${days} d ${hours} h`;
+        return `Resets in ${days} d ${hours} h`;
     if (hours > 0)
-        return `Se restablece en ${hours} h ${minutes} min`;
-    return `Se restablece en ${minutes} min`;
+        return `Resets in ${hours} h ${minutes} min`;
+    return `Resets in ${minutes} min`;
 }
