@@ -25,7 +25,7 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
         });
         const accountGroup = new Adw.PreferencesGroup({
             title: 'ChatGPT account',
-            description: 'Connect the session you use for Codex. Your cookie is stored securely in GNOME Keyring.',
+            description: 'Your session cookie is sensitive and may grant access to your ChatGPT account. It is stored in GNOME Keyring and sent only to chatgpt.com to retrieve usage.',
         });
 
         const statusIcon = new Gtk.Image({
@@ -91,8 +91,13 @@ export default class CodexMonitorPreferences extends ExtensionPreferences {
 
         const privacyGroup = new Adw.PreferencesGroup({title: 'Privacy'});
         privacyGroup.add(new Adw.ActionRow({
-            title: 'Secure storage',
-            subtitle: 'The cookie is kept in GNOME Keyring, not in preferences or plain-text files.',
+            title: 'Credential use',
+            subtitle: 'The cookie is sent to ChatGPT to obtain an access token; usage is then requested from chatgpt.com. No telemetry is collected.',
+            activatable: false,
+        }));
+        privacyGroup.add(new Adw.ActionRow({
+            title: 'Unofficial service integration',
+            subtitle: 'Usage retrieval relies on private ChatGPT web endpoints that may change. Codex Monitor is independent and is not affiliated with OpenAI.',
             activatable: false,
         }));
 

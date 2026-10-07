@@ -54,11 +54,17 @@ The refresh interval can be set from 5 to 120 minutes; the default is 15 minutes
 
 ## Privacy and service compatibility
 
-The session cookie is stored in GNOME Keyring and is not written to GSettings or a plain-text preferences file. The connection test uses the cookie you enter without saving it. Remove the saved credential at any time from **Preferences → Account → Delete cookie**.
+Your ChatGPT session cookie is a sensitive credential that may grant access to your account. Only enter it if you trust this extension. Codex Monitor stores a saved cookie in GNOME Keyring; it is not written to GSettings or a plain-text preferences file. The connection test sends the cookie you enter to ChatGPT but does not save it. Remove a saved credential at any time from **Preferences → Account → Delete cookie**.
 
-Codex Monitor retrieves usage through ChatGPT web endpoints that are not a public, stable API. These endpoints may change, which can temporarily interrupt usage reporting. This project is independent and is not affiliated with or endorsed by OpenAI.
+For usage retrieval, the extension sends the cookie to `chatgpt.com`'s `/api/auth/session` endpoint, then uses the returned access token to request `/backend-api/wham/usage` from the same host. The source code contains no telemetry or other data destinations.
+
+These ChatGPT web endpoints are private and are not a public, stable API. They may change, which can temporarily interrupt usage reporting. Codex Monitor is an independent community project and is not affiliated with or endorsed by OpenAI.
 
 Treat your session cookie like a password: do not share it, publish it, or include it in bug reports.
+
+## Trademarks and attribution
+
+The OpenAI logo is a trademark of OpenAI and is used only to identify the ChatGPT service supported by this extension. OpenAI and ChatGPT are trademarks of OpenAI. Their use does not imply sponsorship or endorsement. Codex Monitor is distributed under the MIT License; that license does not grant rights to third-party trademarks or branding.
 
 ## Development
 
