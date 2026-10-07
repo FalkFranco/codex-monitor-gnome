@@ -15,21 +15,26 @@ La cookie solo se conserva en el llavero de GNOME; no se escribe en GSettings ni
 
 ## Desarrollo local
 
-El directorio fuente también es la instalación de desarrollo actual. Para validar el esquema después de cambiarlo:
+El repositorio fuente se mantiene separado del directorio de extensión instalado. Desde la raíz del repo, valida el esquema con:
 
 ```sh
 glib-compile-schemas --strict schemas
 ```
 
-Para crear un bundle instalable, incluye explícitamente el código en subdirectorios y escríbelo fuera de este árbol fuente:
+Para construir el bundle, incluye explícitamente el código en subdirectorios y escribe el resultado fuera de este árbol fuente:
 
 ```sh
 gnome-extensions pack --force --extra-source=src --extra-source=LICENSE --extra-source=README.md --out-dir=/tmp .
 ```
 
-Sin `--extra-source=src`, `gnome-extensions pack` puede omitir los módulos y el logo local y producir un paquete incompleto.
+Sin `--extra-source=src`, `gnome-extensions pack` puede omitir los módulos y el logo local y producir un paquete incompleto. Para instalarlo en este equipo:
 
-No instales el bundle con `--force` sobre el mismo directorio que contiene el repo: el instalador reemplaza los archivos instalados. En otra computadora, clona el repositorio directamente en el directorio de extensiones usando el UUID de `metadata.json`, compila el esquema y habilita la extensión.
+```sh
+gnome-extensions install --force /tmp/codex-monitor@frankooseb.shell-extension.zip
+gnome-extensions enable codex-monitor@frankooseb
+```
+
+El bundle se instala en el directorio de extensiones de GNOME, sin reemplazar el repo fuente.
 
 Después de cambiar código de una extensión activa, puede ser necesario desactivarla y activarla de nuevo o reiniciar la sesión. Abre Preferencias con:
 
@@ -45,11 +50,14 @@ El proyecto usa licencia MIT; consulta `LICENSE`. La URL del repositorio y el UU
 
 ## Instalar en otra computadora
 
-Clona el repositorio en el directorio de extensiones usando el UUID de `metadata.json`:
+Clona el repo en un directorio de proyectos, compílalo e instala el bundle:
 
 ```sh
-git clone https://github.com/FalkFranco/codex-monitor-gnome.git "$HOME/.local/share/gnome-shell/extensions/codex-monitor@frankooseb"
-glib-compile-schemas "$HOME/.local/share/gnome-shell/extensions/codex-monitor@frankooseb/schemas"
+git clone https://github.com/FalkFranco/codex-monitor-gnome.git "$HOME/Projects/codex-monitor-gnome"
+cd "$HOME/Projects/codex-monitor-gnome"
+glib-compile-schemas --strict schemas
+gnome-extensions pack --force --extra-source=src --extra-source=LICENSE --extra-source=README.md --out-dir=/tmp .
+gnome-extensions install --force /tmp/codex-monitor@frankooseb.shell-extension.zip
 gnome-extensions enable codex-monitor@frankooseb
 gnome-extensions prefs codex-monitor@frankooseb
 ```
